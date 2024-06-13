@@ -58,7 +58,6 @@ public class VideoIndexer {
     private final ElasticDocumentManager documentManager;
     private final SubtitleSentenceExtractor sentenceExtractor = new SubtitleSentenceExtractor();
 
-    private final ThreadPoolTaskExecutor executor;
     private IndexingInfo indexingInfo = IndexingInfo.none();
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
@@ -176,7 +175,7 @@ public class VideoIndexer {
             throw new IndexingConflictException("A new indexing job cannot be started if one is already running");
         }
         indexingInfo = IndexingInfo.started(Instant.now());
-        executor.execute(() -> {
+        Thread.startVirtualThread(() -> {
             try {
                 log.info("Full indexing has been started.");
                 log.info("Start reading videos from the database...");

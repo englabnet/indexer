@@ -5,6 +5,7 @@ import co.elastic.clients.elasticsearch._types.mapping.DynamicMapping;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch._types.mapping.TypeMapping;
 import co.elastic.clients.elasticsearch.indices.GetMappingResponse;
+import co.elastic.clients.elasticsearch.indices.IndexSettings;
 import co.elastic.clients.elasticsearch.indices.get_mapping.IndexMappingRecord;
 import co.elastic.clients.json.JsonData;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,7 @@ public class ElasticIndexManager {
                 elasticsearchClient.indices()
                         .create(b -> b
                                 .index(indexName)
+                                .settings(IndexSettings.of(s -> s.refreshInterval(t -> t.time("1s"))))
                                 .mappings(m -> m
                                         .properties(properties)
                                         .dynamic(DynamicMapping.Strict)
